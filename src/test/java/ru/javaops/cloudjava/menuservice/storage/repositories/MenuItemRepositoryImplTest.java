@@ -47,7 +47,7 @@ class MenuItemRepositoryImplTest extends BaseTest {
                 .description("New Cappuccino Description")
                 .imageUrl("http://images.com/new_cappuccino.png")
                 .build();
-        var id = getIdByName("Cappuccino");
+        var id = getIdByName("Cappuccino12");
         int updateCount = menuItemRepository.updateMenu(id, dto);
         assertThat(updateCount).isEqualTo(1);
         MenuItem updated = menuItemRepository.findById(id).get();
