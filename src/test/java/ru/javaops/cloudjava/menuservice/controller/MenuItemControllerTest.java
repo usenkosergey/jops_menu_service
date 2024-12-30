@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import ru.javaops.cloudjava.menuservice.BaseTest;
 import ru.javaops.cloudjava.menuservice.dto.MenuItemDto;
+import ru.javaops.cloudjava.menuservice.service.MenuService;
+import ru.javaops.cloudjava.menuservice.testutils.TestData;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +25,56 @@ public class MenuItemControllerTest extends BaseTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Test
+    void getMenu_returnsMenu_whenItExists() {
+        var id = getIdByName("Cappuccino");
+        webTestClient.get()
+                .uri(BASE_URL + "/" + id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MenuItemDto.class)
+                .value(response -> {
+                    assertThat(response.getId()).isNotNull();
+                    assertThat(response.getName()).isEqualTo("Cappuccino");
+                });
+    }
+
+    @Test
+    void getMenus_returnsEmptyListForCategoryNotPresentInDb() {
+        webTestClient.get()
+                .uri(BASE_URL + "?category=lunch&sort=az")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(MenuItemDto.class)
+                .value(response -> {
+                    assertThat(response).isEmpty();
+                });
+    }
+
+    @Test
+    void getMenu_returnsNotFound_whenItemNotExists() {
+        var id = 1000L;
+        webTestClient.get()
+                .uri(BASE_URL + "/" + id)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void getMenus_returnsCorrectListForDRINKS_sortedByAZ() {
+        webTestClient.get()
+                .uri(BASE_URL + "?category=drinks&sort=az")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(MenuItemDto.class)
+                .value(items -> {
+                    assertThat(items).hasSize(3);
+                    assertThat(items.get(0).getName()).isEqualTo("Cappuccino");
+                    assertThat(items.get(1).getName()).isEqualTo("Tea");
+                    assertThat(items.get(2).getName()).isEqualTo("Wine");
+                });
+    }
 
     @Test
     void createMenuItem_createsItem() {
