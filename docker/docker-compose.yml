@@ -21,7 +21,7 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - dbusb:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready", "-d", "menu_service_db" ]
       interval: 30s
@@ -30,5 +30,5 @@ services:
       start_period: 80s
 
 volumes:
-  dbusb:
+  db:
     driver: local
