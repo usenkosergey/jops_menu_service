@@ -12,7 +12,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/menu_service_db
 
   postgres:
-    image: "postgres:17.2"
+    image: "postgres:16.1"
     container_name: "postgres_1"
     ports:
       - "15432:5432"
