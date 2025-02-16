@@ -31,6 +31,7 @@ ext {
 	mapstructVersion = '1.5.5.Final'
 	mapstructLombokBindingVersion = '0.2.0'
 	springdocVersion = '2.5.0'
+	springCloudVersion = '2023.0.1'
 }
 
 dependencies {
@@ -42,6 +43,8 @@ dependencies {
 	implementation "io.hypersistence:hypersistence-utils-hibernate-63:${hypersistenceVersion}"
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.retry:spring-retry'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor "org.hibernate:hibernate-jpamodelgen:${jpaModelGenVersion}"
@@ -54,6 +57,12 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 bootBuildImage {
